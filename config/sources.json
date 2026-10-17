@@ -1,0 +1,220 @@
+{
+  "sources": [
+    {
+      "id": "nist-ssdf",
+      "title": "NIST SSDF publications",
+      "publisher": "NIST CSRC",
+      "url": "https://csrc.nist.gov/projects/ssdf/publications",
+      "status": "final",
+      "domains": [
+        "secure-development",
+        "software-supply-chain"
+      ],
+      "ds3_impact": [
+        "all-services",
+        "ci-cd",
+        "release-governance"
+      ],
+      "notes": "Track final SSDF and separately labeled drafts."
+    },
+    {
+      "id": "nist-key-management",
+      "title": "NIST Key Management publications",
+      "publisher": "NIST CSRC",
+      "url": "https://csrc.nist.gov/Projects/key-management/publications",
+      "status": "final",
+      "domains": [
+        "cryptography",
+        "key-management",
+        "hsm-mpc"
+      ],
+      "ds3_impact": [
+        "identity",
+        "signing-authorization",
+        "custody-control"
+      ],
+      "notes": "Track current and draft revisions; validate cryptographic transition guidance."
+    },
+    {
+      "id": "fedwire",
+      "title": "Fedwire Funds Service",
+      "publisher": "Federal Reserve Financial Services",
+      "url": "https://www.frbservices.org/financial-services/wires/index.html",
+      "status": "informational",
+      "domains": [
+        "payments",
+        "fedwire",
+        "operations"
+      ],
+      "ds3_impact": [
+        "settlement-orchestrator",
+        "payment-adapters",
+        "reconciliation"
+      ],
+      "notes": "Verify current operating circulars, formats, cutoffs, testing and participant requirements."
+    },
+    {
+      "id": "fed-circulars",
+      "title": "Federal Reserve operating circulars",
+      "publisher": "Federal Reserve Financial Services",
+      "url": "https://www.frbservices.org/resources/rules-regulations/operating-circulars.html",
+      "status": "informational",
+      "domains": [
+        "payments",
+        "legal-operations"
+      ],
+      "ds3_impact": [
+        "settlement-orchestrator",
+        "legal-evidence",
+        "reconciliation"
+      ],
+      "notes": "Technical integration does not establish access or eligibility."
+    },
+    {
+      "id": "sec-tokenized-securities",
+      "title": "SEC Statement on Tokenized Securities",
+      "publisher": "U.S. Securities and Exchange Commission",
+      "url": "https://www.sec.gov/newsroom/speeches-statements/corp-fin-statement-tokenized-securities-012826-statement-tokenized-securities",
+      "status": "informational",
+      "domains": [
+        "securities",
+        "tokenization",
+        "disclosure"
+      ],
+      "ds3_impact": [
+        "instrument-registry",
+        "representation",
+        "legal-evidence",
+        "compliance"
+      ],
+      "notes": "Assess legal status, scope and applicability with qualified counsel."
+    },
+    {
+      "id": "occ-fintech",
+      "title": "OCC financial technology resources",
+      "publisher": "Office of the Comptroller of the Currency",
+      "url": "https://www.occ.gov/topics/supervision-and-examination/bank-operations/financial-technology/index-financial-technology.html",
+      "status": "informational",
+      "domains": [
+        "banking",
+        "digital-assets",
+        "risk-management"
+      ],
+      "ds3_impact": [
+        "policy-engine",
+        "custody-control",
+        "compliance"
+      ],
+      "notes": "Track current bulletins and interpretive materials; not a complete legal inventory."
+    },
+    {
+      "id": "ofac",
+      "title": "OFAC sanctions resources",
+      "publisher": "U.S. Department of the Treasury",
+      "url": "https://ofac.treasury.gov/",
+      "status": "informational",
+      "domains": [
+        "sanctions",
+        "screening",
+        "aml-controls"
+      ],
+      "ds3_impact": [
+        "counterparty-onboarding",
+        "policy-engine",
+        "transaction-monitor"
+      ],
+      "notes": "Production screening requires approved data, auditability and operational controls."
+    },
+    {
+      "id": "bis-cpmi",
+      "title": "BIS Committee on Payments and Market Infrastructures",
+      "publisher": "Bank for International Settlements",
+      "url": "https://www.bis.org/cpmi/index.htm",
+      "status": "informational",
+      "domains": [
+        "financial-market-infrastructure",
+        "payments",
+        "tokenization"
+      ],
+      "ds3_impact": [
+        "settlement-orchestrator",
+        "reconciliation",
+        "liquidity",
+        "collateral"
+      ],
+      "notes": "Map relevant principles to the applicable DS3 services."
+    },
+    {
+      "id": "dtcc",
+      "title": "DTCC Digital Assets",
+      "publisher": "DTCC",
+      "url": "https://www.dtcc.com/digital-assets",
+      "status": "vendor-docs",
+      "domains": [
+        "dtcc",
+        "securities-settlement",
+        "tokenization"
+      ],
+      "ds3_impact": [
+        "instrument-registry",
+        "representation",
+        "settlement-orchestrator"
+      ],
+      "notes": "Product pages do not prove DS3 connectivity, certification or eligibility."
+    },
+    {
+      "id": "canton",
+      "title": "Canton Network documentation",
+      "publisher": "Canton Network",
+      "url": "https://docs.canton.network/",
+      "status": "vendor-docs",
+      "domains": [
+        "canton",
+        "privacy",
+        "distributed-ledger"
+      ],
+      "ds3_impact": [
+        "ledger-adapters",
+        "verified-events",
+        "settlement-orchestrator"
+      ],
+      "notes": "Pin API/schema versions, network environment, participant permissions and test evidence."
+    },
+    {
+      "id": "ethereum",
+      "title": "Ethereum developer documentation",
+      "publisher": "Ethereum.org",
+      "url": "https://ethereum.org/en/developers/docs/",
+      "status": "vendor-docs",
+      "domains": [
+        "evm",
+        "smart-contracts",
+        "consensus"
+      ],
+      "ds3_impact": [
+        "ledger-adapters",
+        "tokenization",
+        "event-ingestion"
+      ],
+      "notes": "EVM compatibility does not prove interoperability or finality equivalence."
+    },
+    {
+      "id": "fatf",
+      "title": "FATF virtual assets and VASPs",
+      "publisher": "Financial Action Task Force",
+      "url": "https://www.fatf-gafi.org/en/topics/virtual-assets.html",
+      "status": "informational",
+      "domains": [
+        "aml-cft",
+        "virtual-assets",
+        "travel-rule"
+      ],
+      "ds3_impact": [
+        "counterparty-onboarding",
+        "compliance",
+        "policy-engine"
+      ],
+      "notes": "Apply international standards through jurisdiction-specific legal analysis."
+    }
+  ]
+}

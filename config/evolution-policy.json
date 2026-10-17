@@ -1,0 +1,28 @@
+{
+  "policy_version": "1.0",
+  "human_approval_required": true,
+  "auto_merge": false,
+  "auto_deploy": false,
+  "transaction_authority": false,
+  "signing_authority": false,
+  "production_policy_mutation": false,
+  "allowed_evolution_targets": [
+    "research-summarizer",
+    "code-review-instructions",
+    "test-generation-instructions"
+  ],
+  "minimum_eval_examples": 10,
+  "require_held_out_evaluation": true,
+  "require_security_review": true,
+  "require_financial_domain_review": true,
+  "require_prompt_injection_tests": true,
+  "candidate_output_only": true,
+  "protected_targets": [
+    "settlement-authorization",
+    "signing-policy",
+    "ledger-finality-policy",
+    "collateral-eligibility",
+    "production-deployment",
+    "access-control"
+  ]
+}
