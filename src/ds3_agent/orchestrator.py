@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 import os
 import httpx
+import ipaddress
+from urllib.parse import urlsplit
 from .control_plane import ControlPlane
 from .scoped_tools import invoke
 
@@ -25,22 +27,31 @@ class OpenAICompatibleLLM:
         self.endpoint = endpoint or os.environ.get("DS3_LLM_ENDPOINT", "https://api.openai.com/v1/chat/completions")
         self.model = model or os.environ.get("DS3_LLM_MODEL", "gpt-4.1-mini")
         self.api_key = api_key or os.environ.get("DS3_LLM_API_KEY")
-        from urllib.parse import urlsplit
         parsed = urlsplit(self.endpoint)
-        if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password or parsed.fragment:
-            raise ValueError("LLM endpoint must be an HTTPS URL without credentials or fragment")
-        if not self.endpoint.endswith("/chat/completions"):
-            raise ValueError("Only chat/completions endpoints are supported")
+        if (not parsed.hostname or parsed.username or parsed.password or parsed.fragment
+                or parsed.query or parsed.path != "/v1/chat/completions"):
+            raise ValueError("Unsupported LLM endpoint")
+        try:
+            loopback = ipaddress.ip_address(parsed.hostname).is_loopback
+        except ValueError:
+            loopback = parsed.hostname == "localhost"
+        self.local = parsed.scheme == "http" and loopback and parsed.port == 11434
+        if not self.local and parsed.scheme != "https":
+            raise ValueError("Remote LLM endpoints must use HTTPS")
+        if self.local and os.environ.get("DS3_LOCAL_LLM") != "1":
+            raise ValueError("Set DS3_LOCAL_LLM=1 to explicitly allow local Ollama")
+        if self.local and not model and not os.environ.get("DS3_LLM_MODEL"):
+            self.model = "llama3.2:3b"
 
     def propose(self, prompt: str, context: str) -> dict:
-        if not self.api_key:
+        if not self.local and not self.api_key:
             raise LLMError("DS3_LLM_API_KEY not configured")
         messages = [{"role": "system", "content": SYSTEM},
                     {"role": "user", "content": json.dumps({"task": prompt, "context": context})}]
         try:
             with httpx.Client(timeout=30, follow_redirects=False) as client:
                 response = client.post(self.endpoint,
-                    headers={"Authorization": f"Bearer {self.api_key}"},
+                    headers={} if self.local else {"Authorization": f"Bearer {self.api_key}"},
                     json={"model": self.model, "messages": messages,
                           "temperature": 0, "response_format": {"type": "json_object"}})
                 response.raise_for_status()
