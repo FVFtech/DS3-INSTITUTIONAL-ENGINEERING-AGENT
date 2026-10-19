@@ -42,3 +42,55 @@ def evolve(target: str = typer.Argument(..., help="Allowlisted prompt target")) 
         console.print(f"[red]Blocked:[/red] {exc}")
         raise typer.Exit(2) from exc
     console.print(f"Candidate written for human review only: {candidate}")
+
+
+# Control-plane commands use a local SQLite database. No deployment or execution authority.
+import json as _json
+import os as _os
+from pathlib import Path as _Path
+from .control_plane import ControlPlane as _ControlPlane
+
+def _store() -> _ControlPlane:
+    path = _Path(_os.environ.get("DS3_TASK_DB", "data/agent-tasks.sqlite"))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    return _ControlPlane(path)
+
+@app.command("task-create")
+def task_create(prompt: str = typer.Argument(..., help="Engineering review request")) -> None:
+    identifier = _store().create(prompt)
+    console.print(f"Created pending task: {identifier}")
+
+@app.command("task-list")
+def task_list() -> None:
+    console.print(_json.dumps(_store().list(), indent=2))
+
+@app.command("task-show")
+def task_show(task_id: str) -> None:
+    try:
+        console.print(_json.dumps(_store().get(task_id), indent=2))
+    except KeyError as exc:
+        raise typer.BadParameter("Unknown task ID") from exc
+
+@app.command("task-run")
+def task_run(task_id: str) -> None:
+    """Generate a proposal only, never execute its recommendations."""
+    from .orchestrator import process_task
+    try:
+        result = process_task(_store(), task_id)
+    except Exception:
+        console.print("[red]Planning failed. Task marked failed; no actions executed.[/red]")
+        raise typer.Exit(2) from None
+    console.print(_json.dumps(result, indent=2))
+    console.print("[yellow]Awaiting external human review. No changes applied.[/yellow]")
+
+@app.command("task-review")
+def task_review(task_id: str, reviewer: str, decision: str, rationale: str) -> None:
+    """Record operator-supplied human review metadata; does not verify identity or execute."""
+    if _os.environ.get("DS3_ALLOW_LOCAL_REVIEW") != "1":
+        console.print("[red]Local review disabled. Set DS3_ALLOW_LOCAL_REVIEW=1 in a trusted operator environment.[/red]")
+        raise typer.Exit(2)
+    try:
+        approval_id = _store().decide(task_id, reviewer, decision, rationale)
+    except ValueError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    console.print(f"Review recorded: {approval_id}. Nothing executed or deployed.")
